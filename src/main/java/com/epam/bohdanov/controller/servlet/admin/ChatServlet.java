@@ -24,6 +24,7 @@ import com.epam.bohdanov.controller.Path;
 import com.epam.bohdanov.model.bean.ChatBean;
 import com.epam.bohdanov.model.bean.MessageBean;
 import com.epam.bohdanov.model.bean.Person;
+import com.epam.bohdanov.utils.JSONResponseHelper;
 
 @WebServlet("/admin/chat")
 public class ChatServlet extends HttpServlet {
@@ -66,10 +67,10 @@ public class ChatServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String chatID = request.getParameter("chatID");
 		String message = request.getParameter("message");
-		response.setContentType("application/json, charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		JSONObject responseJSON = new JSONObject();
 
+		JSONResponseHelper responseHelper = new JSONResponseHelper(response);
+
+		String result = "fail";
 		if (chatID != null && message != null) {
 			Session userSession = userChatSessions.get(chatID);
 			userSession.getAsyncRemote().sendText(message);
@@ -77,13 +78,9 @@ public class ChatServlet extends HttpServlet {
 			MessageBean messageBean = new MessageBean(Person.SYSTEM, message);
 			chatRooms.get(chatID).getMessages().add(messageBean);
 
-			responseJSON.put("result", "success");
-		} else {
-			responseJSON.put("result", "fail");
+			result = "success";
 		}
-		String json = responseJSON.toString();
-		out.write(json);
-		out.close();
+		responseHelper.sendResponse("result", result);
 	}
 
 	private Map<ChatBean, String> getChatLinks() {

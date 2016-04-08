@@ -35,12 +35,17 @@
     	<div class="col-sm-12">
 	    	<div class="col-sm-6">
 		    	<ul class="list-group chatList">
-					<c:forEach var="chat" items="${chatLinks}" varStatus="loop">
-						<a data-room-id="${chat.key.id}" data-href="${chat.value}"><li class="list-group-item ${chat.key.newMessage ? 'new' :'' }">
-						  <!-- <span class="badge">14</span> -->
-						  Chat with userID: ${chat.key.id}
-						</li></a>
-					</c:forEach>
+		    		<c:if test="${not empty chatLinks}">
+						<c:forEach var="chat" items="${chatLinks}" varStatus="loop">
+							<a data-room-id="${chat.key.id}" data-href="${chat.value}"><li class="list-group-item ${chat.key.newMessage ? 'new' :'' }">
+							  <!-- <span class="badge">14</span> -->
+							  Chat with userID: ${chat.key.id}
+							</li></a>
+						</c:forEach>
+					</c:if>
+					<c:if test="${empty chatLinks}">
+						<span id="empty">No such dialogs</span>
+					</c:if>
 				</ul>
 	    	</div>
 	    	<div class="col-sm-6 activeChatRoom">

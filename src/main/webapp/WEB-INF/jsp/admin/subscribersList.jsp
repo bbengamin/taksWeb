@@ -32,23 +32,25 @@
     </nav>
     
     <div class="content">
-    	<div class="col-sm-12">
-	    	<div class="col-sm-6 subs">
-	    	<h2>Subscribers</h2>
-	    	<form class="form-horizontal">
-				<c:forEach var="subscriber" items="${subscribers}" varStatus="loop">
-					 <div class="form-group">
-						<input type="checkbox" name='subscribers[]' id="sub${subscriber.id}" class="form-control sub-box">
-						<label for="sub${subscriber.id}" class="control-label">${subscriber.name}</label>
-					  </div>
-				</c:forEach>
-			</form>
+		    	<h2 class="center">Subscribers</h2>
+   	 <form id="sub_form" class="form-horizontal">
+	    	<div class="col-sm-12">
+		    	<div class="col-sm-6 subs">
+		    	
+					<c:forEach var="subscriber" items="${subscribers}" varStatus="loop">
+						 <div class="form-group">
+							<input type="checkbox" value='${subscriber.email}' name='subscribers' id="sub${subscriber.id}" class="form-control sub-box">
+							<label for="sub${subscriber.id}" class="control-label">${subscriber.name}</label>
+						  </div>
+					</c:forEach>
+				
+		    	</div>
 	    	</div>
-    	</div>
-    	<div class="col-sm-12 email-text">
-    		<textarea id='emailText'></textarea>
-    		<button type="button" class="btn btn-primary active delivery">Send delivery</button>
-    	</div>
+	    	<div class="col-sm-8 email-text">
+	    		<textarea name='text' id='emailText'></textarea>
+	    		<button type="button" id='send_d' class="btn btn-primary active delivery">Send delivery</button>
+	    	</div>
+    	</form>
     </div>
     <!--[if lt IE 9]>
         <script type="text/javascript" src="../js/jquery-1.11.0.min.js?ver=1"></script>
@@ -66,6 +68,30 @@
 	    	config.toolbarCanCollapse = true;
 	    };
 	    CKEDITOR.replace( 'emailText' );
+	    
+	    $('#send_d').click(function(){
+	    	 for ( instance in CKEDITOR.instances ){
+    	        CKEDITOR.instances[instance].updateElement();
+	    	 }
+	    	
+	    	 if(($('#sub_form input[type="checkbox"]:checked').length == 0) || $('#sub_form textarea').val() == ""){
+	    		 alert("Виберите подписчиков и заполните текст письма");
+	    		 return;
+	    	 }
+	    	$.ajax({
+				type : "POST",
+				url : "/taskWeb/admin/subscribers",
+				data : $('#sub_form input[type="checkbox"]:checked, textarea'),
+				dataType : "json",
+				success : function() {
+					$('#sub_form')[0].reset();
+					for ( instance in CKEDITOR.instances ){
+						CKEDITOR.instances[instance].setData('');
+         		    }
+					alert("Рассылка отправлена!");
+				}
+			});
+	    });
     </script>
 </body>
 </html>

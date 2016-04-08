@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -17,11 +19,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.antlr.stringtemplate.StringTemplate;
 import org.apache.log4j.Logger;
 
 import com.epam.bohdanov.controller.Path;
+import com.epam.bohdanov.model.bean.EmailInfoBean;
 import com.epam.bohdanov.model.entity.Subscriber;
 import com.epam.bohdanov.service.SubscribersService;
+import com.epam.bohdanov.utils.EMailHelper;
+import com.epam.bohdanov.utils.JSONResponseHelper;
 
 @WebServlet("/admin/subscribers")
 public class SubscribersServlet extends HttpServlet {
@@ -56,18 +62,21 @@ public class SubscribersServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-	/*	InputStream fileTemplate = new ;
-        String stringTemplate = EmailUtil.convertTemplate(fileTemplate);
-        StringTemplate mail = new StringTemplate(stringTemplate);
-        mail.setAttribute(TemplateConstants.TRAINING_TITLE, trainingRecordBean.getTitle());
-        mail.setAttribute(TemplateConstants.TRAINING_ID, trainingRecordBean.getId());
-        mail.setAttribute(TemplateConstants.TRAINING_START_DATE,  EmailUtil.formatDateTime(trainingRecordBean.getStartDate()));
-        mail.setAttribute(TemplateConstants.TRAINING_LOCATION, trainingRecordBean.getLocation());
-        mail.setAttribute(TemplateConstants.TRAINER_NAME, trainingRecordBean.getCoach());
-        mail.setAttribute(TemplateConstants.IMAGES_HOST, imagesHost);
-        return mail.toString();*/
+		String text = request.getParameter("text");
+		String[] subscribers = request.getParameterValues("subscribers");
+		String stringTemplate = getTemplate("delivery.html");
+		StringTemplate mail = new StringTemplate(stringTemplate);
+		mail.setAttribute("emailText", text);
 
+		EMailHelper emailHelper = new EMailHelper();
+		EmailInfoBean emailBean = new EmailInfoBean();
+		emailBean.setTemplate(mail.toString());
+		emailBean.setSubject("Vinni and CO Delivery");
+		emailBean.setTo(Arrays.asList(subscribers));
+
+		emailHelper.send(emailBean);
+		JSONResponseHelper responseHelper = new JSONResponseHelper(response);
+		responseHelper.sendResponse("result", "success");
 	}
 
 	private String getTemplate(String filename) {
