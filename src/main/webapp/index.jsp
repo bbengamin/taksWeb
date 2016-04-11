@@ -84,13 +84,13 @@
 		<div class="container">
 			<div class="signup-wrapper animated hiding" data-animation="bounceInUp" data-delay="0">
 				<div class="row">
-						<form class="form-inline form-register form-register-small" method="post" action="signup.php">
+						<form class="form-inline form-register form-register-small" method="post">
 							<div class="form-group">
-								<input size="30" type="text" class="form-control required" name="name" id="fullname" placeholder="Ваше имя">
+								<input size="30" type="text" class="form-control required" name="name" required id="fullname" placeholder="Ваше имя">
 							</div>
 
 							<div class="form-group">
-								<input size="45" type="email" class="form-control required email" name="email" id="email" placeholder="Почта">
+								<input size="45" type="email" class="form-control required email" required name="email" id="email" placeholder="Почта">
 							</div>
 							<div class="form-group submit-wrap">
 								<input type="hidden" name="small-form"/>

@@ -41,6 +41,8 @@ p { font-size: 16px; line-height: 27px; color: #1D1D1D; }
     margin: 0 auto;
     border: 3px solid #1AC6FF;
     border-radius: 25px;
+    background-color: white;
+    color: black;
 }
 .message-wrapper{
     overflow-y: scroll;
@@ -78,6 +80,9 @@ li.list-group-item.new:after {
     float: right;
     color: red;
 }
+.admin-nav{
+    margin: 6px 18px;
+}
 .arrow-down{
    background-image: url("../img/arrow_down.png");
     display: block;
@@ -87,7 +92,7 @@ li.list-group-item.new:after {
     height: 64px;
     background-size: 64px 64px;
     left: 50%;
-    bottom: 40px;
+    bottom: 3%;
     margin-left: -32px;
 }
 .writer{
@@ -98,6 +103,24 @@ li.list-group-item.new:after {
     border: 3px solid #1AC6FF;
     border-radius: 25px;
     text-align: left;
+    color: black;
+    background-color: white;
+}
+.chatList li{
+	margin-top: 4px;
+}
+.loading{
+	background-image: url("../img/loading.gif");
+    display: none;
+    background-size: 40px 40px;
+    width: 40px;
+    height: 40px;
+    margin-top: 17px;
+    font-size: 20px;
+    text-indent: 56px;
+    line-height: 37px;
+    font-weight: 500;
+    float: left
 }
 .writer textarea{
     border: 0;
@@ -124,17 +147,40 @@ li.list-group-item.new:after {
 .email-text{
     position: relative;
     display: block;
-    margin-top: 47px;
 }
 .subs{
     padding: 8px 50px;
     border: 1px solid #B7ABAB;
     border-radius: 10px;
+    background-color: white;
+    color: black;
 }
 .sub-box{
     display: inline-block;
     top: 4px;
     position: relative;
+}
+.back {
+    background: url('../img/background/low_poly_background.jpg') no-repeat top center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-attachment: fixed;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    font-weight: 300;
+    color: white;
+}
+.admin-wrapp {
+    position: absolute;
+    width: 100%;
+}
+.admin-content {
+    position: relative;
+    margin: 0 auto;
+    width: 80%;
 }
 small { font-weight: 300; font-size: 15px; line-height: 26px; }
 

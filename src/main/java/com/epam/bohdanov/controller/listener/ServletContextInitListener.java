@@ -16,9 +16,14 @@ import javax.websocket.Session;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import com.epam.bohdanov.dao.impl.DialogDAOMySQL;
+import com.epam.bohdanov.dao.impl.MessagesDAOMySQL;
 import com.epam.bohdanov.dao.impl.SubscriberDAOMySQL;
+import com.epam.bohdanov.dao.interfaces.DialogDAO;
+import com.epam.bohdanov.dao.interfaces.MessagesDAO;
 import com.epam.bohdanov.dao.interfaces.SubscriberDAO;
 import com.epam.bohdanov.model.bean.ChatBean;
+import com.epam.bohdanov.service.DialogService;
 import com.epam.bohdanov.service.SubscribersService;
 import com.epam.bohdanov.service.transaction.JdbcTransactionManager;
 import com.epam.bohdanov.service.transaction.TransactionManager;
@@ -34,8 +39,6 @@ public class ServletContextInitListener implements ServletContextListener {
 		ServletContext context = arg0.getServletContext();
 		initLog4J(context);
 		initChat(context);
-		String appPath = context.getRealPath("");
-		System.out.println(appPath);
 
 		DataSource dataSource = null;
 		try {
@@ -47,10 +50,14 @@ public class ServletContextInitListener implements ServletContextListener {
 		}
 
 		SubscriberDAO subscriberDAO = new SubscriberDAOMySQL();
+		DialogDAO dialogDAO = new DialogDAOMySQL();
+		MessagesDAO messagesDAO = new MessagesDAOMySQL();
 		TransactionManager transactionManager = new JdbcTransactionManager(new DBUtils(dataSource));
 		SubscribersService subscribersService = new SubscribersService(transactionManager, subscriberDAO);
+		DialogService dialogService = new DialogService(transactionManager, dialogDAO, messagesDAO);
 
 		context.setAttribute("subscribersService", subscribersService);
+		context.setAttribute("dialogService", dialogService);
 	}
 
 	private void initChat(ServletContext context) {

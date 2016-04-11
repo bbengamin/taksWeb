@@ -23,19 +23,20 @@
 </head>
 
 <body>
-
-    <nav class="navbar navbar-inverse">
+<div class='back'>
+	<nav class="navbar navbar-inverse admin-nav">
         <ul class="nav navbar-nav"> 
            <li><a href="/taskWeb/admin/chat">Chat</a></li>
             <li class="active"><a href="/taskWeb/admin/subscribers">Subscribers</a></li>
         </ul>
     </nav>
-    
+<div class="admin-wrapp">
+  <div class="admin-content">
     <div class="content">
-		    	<h2 class="center">Subscribers</h2>
+   	<h2 class="center">Subscribers</h2>
    	 <form id="sub_form" class="form-horizontal">
-	    	<div class="col-sm-12">
-		    	<div class="col-sm-6 subs">
+	    	<div class="col-sm-6">
+		    	<div class="col-sm-12 subs">
 		    	
 					<c:forEach var="subscriber" items="${subscribers}" varStatus="loop">
 						 <div class="form-group">
@@ -46,12 +47,19 @@
 				
 		    	</div>
 	    	</div>
-	    	<div class="col-sm-8 email-text">
+	    	<div class="col-sm-6 email-text">
 	    		<textarea name='text' id='emailText'></textarea>
+	    		<span class='loading'>Loading...</span>
 	    		<button type="button" id='send_d' class="btn btn-primary active delivery">Send delivery</button>
 	    	</div>
     	</form>
     </div>
+    </div>
+    </div>
+</div>
+<!-- <footer id="footer" class="footer light">
+        <div class="copyright">&copy; 2016 EPAM Systems. Design by Ihor Bohdanov</div>
+</footer> -->
     <!--[if lt IE 9]>
         <script type="text/javascript" src="../js/jquery-1.11.0.min.js?ver=1"></script>
     <![endif]-->  
@@ -78,6 +86,7 @@
 	    		 alert("Виберите подписчиков и заполните текст письма");
 	    		 return;
 	    	 }
+	    	$('.loading').show();
 	    	$.ajax({
 				type : "POST",
 				url : "/taskWeb/admin/subscribers",
@@ -88,6 +97,7 @@
 					for ( instance in CKEDITOR.instances ){
 						CKEDITOR.instances[instance].setData('');
          		    }
+					$('.loading').hide();
 					alert("Рассылка отправлена!");
 				}
 			});

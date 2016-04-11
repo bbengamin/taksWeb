@@ -21,10 +21,14 @@ function disconnect () {
 }
 
 function sendMessage() {
+	var message = $('#your-message').val().trim();
+	if(message.length <= 0){
+		return false;
+	}
+	
 	if(chatClient == null){
 		connect();
 	}
-    var message = $('#your-message').val().trim();
     if (message !== "") {
         var jsonObj = {"message" : message};
         waitForSocketConnection(chatClient, function(){

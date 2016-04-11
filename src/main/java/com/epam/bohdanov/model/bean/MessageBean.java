@@ -1,8 +1,15 @@
 package com.epam.bohdanov.model.bean;
 
-public class MessageBean {
+import com.epam.bohdanov.model.entity.Entity;
+
+public class MessageBean extends Entity {
 	private Person from;
 	private String message;
+	private int dialogId;
+
+	public MessageBean() {
+		super();
+	}
 
 	public MessageBean(Person from, String message) {
 		super();
@@ -26,15 +33,12 @@ public class MessageBean {
 		this.message = message;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("MessageBean [from=");
-		builder.append(from);
-		builder.append(", message=");
-		builder.append(message);
-		builder.append("]");
-		return builder.toString();
+	public int getDialogId() {
+		return dialogId;
+	}
+
+	public void setDialogId(int dialogId) {
+		this.dialogId = dialogId;
 	}
 
 }

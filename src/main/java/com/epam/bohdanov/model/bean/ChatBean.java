@@ -1,23 +1,34 @@
 package com.epam.bohdanov.model.bean;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.websocket.Session;
 
-public class ChatBean {
-	private String id;
+import com.epam.bohdanov.model.entity.Entity;
+
+public class ChatBean extends Entity {
 	private List<MessageBean> messages;
 	private boolean active;
 	private boolean newMessage;
 	private Session adminSession;
+	private Date date;
 
-	public ChatBean(String id) {
+	public ChatBean() {
 		super();
-		this.id = id;
 		active = true;
 		messages = new ArrayList<>();
-		newMessage = false;
+		newMessage = true;
+		date = new Date();
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public boolean isNewMessage() {
@@ -26,14 +37,6 @@ public class ChatBean {
 
 	public void setNewMessage(boolean newMessage) {
 		this.newMessage = newMessage;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public Session getAdminSession() {

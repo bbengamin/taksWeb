@@ -23,18 +23,20 @@
 </head>
 
 <body>
-
-    <nav class="navbar navbar-inverse">
+<div class='back'>
+    <nav class="navbar navbar-inverse admin-nav">
         <ul class="nav navbar-nav"> 
       	    <li class="active"><a href="/taskWeb/admin/chat">Chat</a></li>
             <li><a href="/taskWeb/admin/subscribers">Subscribers</a></li>
         </ul>
     </nav>
-    
+<div class="admin-wrapp">
+  <div class="admin-content">  
     <div class="content">
     	<div class="col-sm-12">
 	    	<div class="col-sm-6">
-		    	<ul class="list-group chatList">
+	    		<h2>Active dialogs</h2>
+		    	<ul class="list-group chatList activeList">
 		    		<c:if test="${not empty chatLinks}">
 						<c:forEach var="chat" items="${chatLinks}" varStatus="loop">
 							<a data-room-id="${chat.key.id}" data-href="${chat.value}"><li class="list-group-item ${chat.key.newMessage ? 'new' :'' }">
@@ -51,7 +53,28 @@
 	    	<div class="col-sm-6 activeChatRoom">
 	    	</div>
     	</div>
+    	<div class="col-sm-12">
+	    	<div class="col-sm-6">
+	    		<h2>History</h2>
+		    	<ul class="list-group chatList">
+		    		<c:if test="${not empty chatHistoryLinks}">
+						<c:forEach var="chat" items="${chatHistoryLinks}" varStatus="loop">
+							<a data-room-id="${chat.key.id}" data-href="${chat.value}"><li class="list-group-item">
+							  <!-- <span class="badge">14</span> -->
+							  Chat with userID: ${chat.key.id}
+							</li></a>
+						</c:forEach>
+					</c:if>
+					<c:if test="${empty chatHistoryLinks}">
+						<span id="empty">No such dialogs</span>
+					</c:if>
+				</ul>
+	    	</div>
+    	</div>
     </div>
+   </div>
+ </div>
+</div>
     <!--[if lt IE 9]>
         <script type="text/javascript" src="../js/jquery-1.11.0.min.js?ver=1"></script>
     <![endif]-->  

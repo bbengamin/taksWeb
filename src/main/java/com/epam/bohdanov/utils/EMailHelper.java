@@ -20,6 +20,10 @@ import com.epam.bohdanov.controller.exception.DataException;
 import com.epam.bohdanov.model.bean.EmailInfoBean;
 
 public class EMailHelper {
+	private static final String EMAIL_ERROR = "Email send eroor";
+	private static final String CHARSET = "text/html; charset=utf-8";
+	private static final String EMAIL_PASSWORD = "lazy_cow_9510";
+	private static final String EMAIL_LOGIN = "testseleniumbohdanov@gmail.com";
 	private static final Logger LOG = Logger.getLogger(EMailHelper.class);
 
 	public void send(EmailInfoBean emailInfoBean) {
@@ -41,7 +45,7 @@ public class EMailHelper {
 			message.setContent(multipart);
 			Transport.send(message);
 		} catch (Exception e) {
-			LOG.error("Email send eroor", e);
+			LOG.error(EMAIL_ERROR, e);
 			throw new DataException(e);
 		}
 	}
@@ -58,7 +62,7 @@ public class EMailHelper {
 
 	private BodyPart getBody(String template) throws MessagingException {
 		BodyPart messageBodyPart = new MimeBodyPart();
-		messageBodyPart.setContent(template, "text/html; charset=utf-8");
+		messageBodyPart.setContent(template, CHARSET);
 		return messageBodyPart;
 	}
 
@@ -66,7 +70,7 @@ public class EMailHelper {
 		return Session.getInstance(props, new Authenticator() {
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("testseleniumbohdanov@gmail.com", "lazy_cow_9510");
+				return new PasswordAuthentication(EMAIL_LOGIN, EMAIL_PASSWORD);
 			}
 		});
 	}
@@ -75,7 +79,7 @@ public class EMailHelper {
 		MimeMessage message = new MimeMessage(session);
 
 		message.setSubject(emailInfoBean.getSubject());
-		message.setFrom(new InternetAddress("testseleniumbohdanov@gmail.com"));
+		message.setFrom(new InternetAddress(EMAIL_LOGIN));
 
 		return message;
 	}

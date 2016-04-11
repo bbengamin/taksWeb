@@ -13,11 +13,14 @@ $(document)
 							+ "?mainAdmin=true");
 					mainAdminConnection.onmessage = function(event) {
 						var text = event.data;
-						if ($('.chatList a[data-room-id="' + text + '"]').length > 0) {
-							$('.chatList a[data-room-id="' + text + '"] li')
-									.addClass("new");
+						if ($('.activeList:first a[data-room-id="' + text
+								+ '"]').length > 0) {
+							$(
+									'.activeList:first a[data-room-id="' + text
+											+ '"] li').addClass("new");
 						} else {
-							$('.chatList')
+							$('#empty').detach();
+							$('.activeList:first')
 									.append(
 											"<a data-room-id="
 													+ text
@@ -25,7 +28,7 @@ $(document)
 													+ text
 													+ "\'><li class='list-group-item new'> Chat with userID: "
 													+ text + "</li></a>");
-							
+
 						}
 					};
 				});
@@ -60,24 +63,29 @@ function keypressHandler() {
 }
 function sendMessage() {
 	var message = $('#your-message').val().trim();
+	if (message.length <= 0) {
+		return false;
+	}
 	var chatID = $('#your-message').attr("data-id");
 	if (message !== "") {
-		$.ajax({
-			type : "POST",
-			url : window.location.href,
-			data : "chatID=" + chatID + "&message=" + message,
-			dataType : "json",
-			success : function() {
-				$('#your-message').val("");
-				var newMessage = "<div class='message text-left'><span class='from'>WE:</span><span class='text'>"
-						+ message + "</span></div>"
-				$('.message-wrapper').append(newMessage);
-				$('#your-message').focus();
-				$('.message-wrapper').scrollTop(
-				$('.message-wrapper')[0].scrollHeight);
-				$(".chatList a[data-room-id='" + chatID + "']").find('li').removeClass("new");
-			}
-		});
+		$
+				.ajax({
+					type : "POST",
+					url : window.location.href,
+					data : "chatID=" + chatID + "&message=" + message,
+					dataType : "json",
+					success : function() {
+						$('#your-message').val("");
+						var newMessage = "<div class='message text-left'><span class='from'>WE:</span><span class='text'>"
+								+ message + "</span></div>"
+						$('.message-wrapper').append(newMessage);
+						$('#your-message').focus();
+						$('.message-wrapper').scrollTop(
+								$('.message-wrapper')[0].scrollHeight);
+						$(".activeList:first a[data-room-id='" + chatID + "']")
+								.find('li').removeClass("new");
+					}
+				});
 	}
 }
 

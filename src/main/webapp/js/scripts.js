@@ -133,6 +133,16 @@ $('.arrow-down').click(function(){
 
 
 $('.form-register button').click(function(event){
+	if($('.form-register input[name="name"]').val().length < 5){
+		showErrorFor("name","Пожалуйста, скажите нам свое имя");
+		event.preventDefault();
+		return false;
+	}
+	if($('.form-register input[name="email"]').val().length < 5 || !$('.form-register input[name="email"]')[0].checkValidity()){
+		showErrorFor("email","Пожалуйста, введите email");
+		event.preventDefault();
+		return false;
+	}
 	event.preventDefault();
 	$.ajax({
 		type : "POST",
@@ -147,13 +157,18 @@ $('.form-register button').click(function(event){
 				$('.form-register').fadeOut('slow');
 				setTimeout(hideAlert, 2000 );
 			}else{
-				var error = '<label for="email" class="error">Такой email уже подписан на обновления, но все равно спасибо!</label>';
-				$('.form-register input[name="email"]').parent().append(error);
-				setTimeout(closeAllErrors, 2000 );
+				showErrorFor("email", "Такой email уже подписан на обновления, но все равно спасибо!")
 			}
 		}
 	});
 });
+
+function showErrorFor(param, mes){
+	var error = '<label for="' + param + '" class="error">' + mes + '</label>';
+	$('.form-register input[name="' + param + '"]').parent().append(error);
+	setTimeout(closeAllErrors, 2000 );
+}
+
 $('.alert-mes').fadeOut('slow');
 function closeAllErrors(){
 	$('label.error').detach();
