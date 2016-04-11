@@ -61,9 +61,7 @@ public class ServletContextInitListener implements ServletContextListener {
 	}
 
 	private void initChat(ServletContext context) {
-		Map<String, Session> userChatSessions = Collections.synchronizedMap(new HashMap<>());
 		Map<String, ChatBean> chatRooms = new HashMap<>();
-		context.setAttribute("userChatSessions", userChatSessions);
 		context.setAttribute("chatRooms", chatRooms);
 	}
 

@@ -19,16 +19,39 @@
     </div>
     <c:if test="${chatRoom.active}">
 	    <div class="writer" onload="connect();" onunload="disconnect();">
-	        <textarea data-id="${chatRoom.id}" id='your-message' onkeypress="keypressHandler()" placeholder="Write you message here..."></textarea>
+	        <textarea data-id="${chatId}" id='your-message' onkeypress="keypressHandler()" placeholder="Write you message here..."></textarea>
 	        <div class="vert-line"></div>
 	        <div class="writer-button " onclick="sendMessage();"></div>
 	    </div>
 	    <script>
-		    chatClient = new WebSocket(endPointURL + "?roomID=${chatRoom.id}");
+		    chatClient = new WebSocket(endPointURL + "?roomID=${chatId}");
 			chatClient.onmessage = function(event){
-				 var text = JSON.parse(event.data).message;
-				 var newMessage = "<div class='message text-right'><span class='text'>" + text + "</span><span class='from'> :USER</span></div>";
-				 $('.message-wrapper').append(newMessage);
+				console.log(event.data);
+				var text = response.message;
+				var newMessage = "<div class='message text-right'><span class='text'>" + text + "</span><span class='from'> :USER</span></div>";
+				$('.message-wrapper').append(newMessage);
+				/* var response = JSON.parse(event.data);
+				if(response.message){
+					var text = response.message;
+					var newMessage = "<div class='message text-right'><span class='text'>" + text + "</span><span class='from'> :USER</span></div>";
+					$('.message-wrapper').append(newMessage);
+				}else{
+					var newid = response.newID;					
+					var destroy = response.destroy;
+					
+					$('textarea[data-id="' + destroy + '"]').parent().detach();
+					$('a[data-room-id="' + destroy + '"]').detach();
+					if($('.activeList li').length <= 0){
+						$('.activeList').append('<span id="empty">No such dialogs</span>');
+					}
+					$('.historyList').append(
+							"<a data-room-id="
+							+ newid
+							+ " data-href='chat?chatID="
+							+ newid
+							+ "&hist=true\'><li class='list-group-item'> Chat with userID: "
+							+ newid + "</li></a>");
+				} */
 			 };
 	    </script>
 	</c:if>

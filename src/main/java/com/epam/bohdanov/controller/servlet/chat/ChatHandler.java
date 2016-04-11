@@ -25,7 +25,6 @@ import com.epam.bohdanov.service.DialogService;
 public class ChatHandler {
 	private static final Logger LOG = Logger.getLogger(ChatHandler.class);
 	private HttpSession httpSession;
-	private Map<String, Session> userChatSessions;
 	private Map<String, ChatBean> chatRooms;
 	private JSONParser parser = new JSONParser();
 
@@ -34,21 +33,19 @@ public class ChatHandler {
 	public void onOpen(Session userSession, EndpointConfig config) {
 		this.httpSession = (HttpSession) config.getUserProperties().get("httpSession");
 		ServletContext context = httpSession.getServletContext();
-		userChatSessions = (Map<String, Session>) context.getAttribute("userChatSessions");
 		chatRooms = (Map<String, ChatBean>) context.getAttribute("chatRooms");
 
-		ChatBean dialog = new ChatBean();
 		if (config.getUserProperties().get("mainAdmin") != null) {
 			context.setAttribute("mainAdmin", userSession);
 		} else if (config.getUserProperties().get("roomID") != null) {
 			String chatId = (String) config.getUserProperties().get("roomID");
-			if(chatRooms.containsKey(chatId)){
+			if (chatRooms.containsKey(chatId)) {
+				cleanAdminSessions(chatRooms);
 				chatRooms.get(chatId).setAdminSession(userSession);
 			}
 		} else {
-			userChatSessions.put(userSession.getId(), userSession);
-
 			if (!chatRooms.containsKey(userSession.getId())) {
+				ChatBean dialog = new ChatBean(userSession);
 				chatRooms.put(userSession.getId(), dialog);
 			}
 			LOG.debug("New session - " + userSession.getId());
@@ -60,10 +57,20 @@ public class ChatHandler {
 		if (chatRooms.containsKey(userSession.getId())) {
 			ChatBean dialog = chatRooms.get(userSession.getId());
 			dialog.setActive(false);
+			/*Session adminSession = dialog.getAdminSession();*/
+
 			DialogService dialogService = (DialogService) httpSession.getServletContext().getAttribute("dialogService");
 			dialogService.addDialog(dialog);
+			
+			
+			Session adminSession = (Session) httpSession.getServletContext().getAttribute("mainAdmin");
+			if (adminSession != null) {
+				JSONObject response = new JSONObject();
+				response.put("destroy", userSession.getId());
+				response.put("newID", dialog.getId());
+				adminSession.getAsyncRemote().sendText(response.toJSONString());
+			}
 		}
-		userChatSessions.remove(userSession);
 		chatRooms.remove(userSession.getId());
 		LOG.debug("Removed session - " + userSession.getId());
 	}
@@ -88,6 +95,12 @@ public class ChatHandler {
 			}
 		} catch (ParseException e) {
 			LOG.error(e.getMessage());
+		}
+	}
+
+	private void cleanAdminSessions(Map<String, ChatBean> dialogs) {
+		for (ChatBean dialog : dialogs.values()) {
+			dialog.setAdminSession(null);
 		}
 	}
 }

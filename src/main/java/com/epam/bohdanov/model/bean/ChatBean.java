@@ -13,10 +13,20 @@ public class ChatBean extends Entity {
 	private boolean active;
 	private boolean newMessage;
 	private Session adminSession;
+	private Session userSession;
+
 	private Date date;
 
 	public ChatBean() {
 		super();
+		active = true;
+		messages = new ArrayList<>();
+		newMessage = true;
+		date = new Date();
+	}
+
+	public ChatBean(Session userSession) {
+		this.userSession = userSession;
 		active = true;
 		messages = new ArrayList<>();
 		newMessage = true;
@@ -45,6 +55,14 @@ public class ChatBean extends Entity {
 
 	public void setAdminSession(Session adminSession) {
 		this.adminSession = adminSession;
+	}
+
+	public Session getUserSession() {
+		return userSession;
+	}
+
+	public void setUserSession(Session userSession) {
+		this.userSession = userSession;
 	}
 
 	public List<MessageBean> getMessages() {

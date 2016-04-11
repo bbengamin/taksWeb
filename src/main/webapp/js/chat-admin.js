@@ -12,25 +12,41 @@ $(document)
 					mainAdminConnection = new WebSocket(endPointURL
 							+ "?mainAdmin=true");
 					mainAdminConnection.onmessage = function(event) {
-						var text = event.data;
-						if ($('.activeList:first a[data-room-id="' + text
-								+ '"]').length > 0) {
-							$(
-									'.activeList:first a[data-room-id="' + text
-											+ '"] li').addClass("new");
-						} else {
-							$('#empty').detach();
-							$('.activeList:first')
-									.append(
-											"<a data-room-id="
-													+ text
-													+ " data-href='chat?chatID="
-													+ text
-													+ "\'><li class='list-group-item new'> Chat with userID: "
-													+ text + "</li></a>");
+						
+						var response = JSON.parse(event.data);
+						if(response.newID && response.destroy){
+							var newid = response.newID;					
+							var destroy = response.destroy;
+							
+							$('textarea[data-id="' + destroy + '"]').parent().detach();
+							$('a[data-room-id="' + destroy + '"]').detach();
+							if($('.activeList li').length <= 0){
+								$('.activeList').append('<span id="empty">No such dialogs</span>');
+							}
+							$('.historyList').append(
+									"<a data-room-id="
+									+ newid
+									+ " data-href='chat?chatID="
+									+ newid
+									+ "&hist=true\'><li class='list-group-item'> Chat with userID: "
+									+ newid + "</li></a>");
+						}else{
+							var text = event.data;
+							if ($('.activeList:first a[data-room-id="' + text + '"]').length > 0) {
+								$('.activeList:first a[data-room-id="' + text + '"] li').addClass("new");
+							} else {
+								$('#empty').detach();
+								$('.activeList:first').append(
+												"<a data-room-id="
+														+ text
+														+ " data-href='chat?chatID="
+														+ text
+														+ "\'><li class='list-group-item new'> Chat with userID: "
+														+ text + "</li></a>");
 
+							}
 						}
-					};
+					 };
 				});
 
 $(window).unload(function() {

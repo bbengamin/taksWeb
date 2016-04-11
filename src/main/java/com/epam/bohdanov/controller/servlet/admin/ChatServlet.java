@@ -31,7 +31,6 @@ public class ChatServlet extends HttpServlet {
 	private static final long serialVersionUID = 411230504322723993L;
 	private static final String QUERY_PARAM_CHAT_ID = "?chatID=";
 	private static final Logger LOG = Logger.getLogger(ChatServlet.class);
-	private Map<String, Session> userChatSessions;
 	private Map<String, ChatBean> chatRooms;
 	private DialogService dialogService;
 
@@ -39,7 +38,6 @@ public class ChatServlet extends HttpServlet {
 	public void init(ServletConfig servletConfig) throws ServletException {
 		LOG.trace("Chat servlet start");
 		ServletContext context = servletConfig.getServletContext();
-		userChatSessions = (Map<String, Session>) context.getAttribute("userChatSessions");
 		chatRooms = (Map<String, ChatBean>) context.getAttribute("chatRooms");
 		dialogService = (DialogService) context.getAttribute("dialogService");
 	}
@@ -57,6 +55,7 @@ public class ChatServlet extends HttpServlet {
 			}
 			chatBean.setNewMessage(false);
 			request.setAttribute("chatRoom", chatBean);
+			request.setAttribute("chatId", chatID);
 
 			String forward = Path.CHAT_WINDOW_JSP;
 			RequestDispatcher rd = request.getRequestDispatcher(forward);
@@ -85,7 +84,7 @@ public class ChatServlet extends HttpServlet {
 
 		String result = "fail";
 		if (chatID != null && message != null) {
-			Session userSession = userChatSessions.get(chatID);
+			Session userSession = chatRooms.get(chatID).getUserSession();
 			userSession.getAsyncRemote().sendText(message);
 
 			MessageBean messageBean = new MessageBean(Person.SYSTEM, message);

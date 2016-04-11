@@ -172,15 +172,23 @@ li.list-group-item.new:after {
     position: fixed;
     font-weight: 300;
     color: white;
+    top: 0px;
+    left: 0px;
 }
 .admin-wrapp {
     position: absolute;
     width: 100%;
+    color: white;
 }
 .admin-content {
     position: relative;
     margin: 0 auto;
     width: 80%;
+}
+.activeChatRoom {
+    position: fixed;
+    left: 50%;
+    top: 100px;
 }
 small { font-weight: 300; font-size: 15px; line-height: 26px; }
 
